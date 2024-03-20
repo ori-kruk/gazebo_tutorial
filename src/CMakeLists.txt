@@ -13,8 +13,12 @@ target_link_libraries(GimbalSmall2dPlugin ${GAZEBO_LIBRARIES})
 add_library(ArduCopterPlugin SHARED ArduCopterPlugin.cc)
 target_link_libraries(ArduCopterPlugin ${GAZEBO_LIBRARIES})
 
+add_library(ArduPilotPlugin SHARED ArduPilotPlugin.cc)
+target_link_libraries(ArduPilotPlugin ${GAZEBO_LIBRARIES})
+
 install(TARGETS
 GimbalSmall2dPlugin
 ArduCopterPlugin
+ArduPilotPlugin
   DESTINATION ${PROJECT_SOURCE_DIR}/bin
 )
