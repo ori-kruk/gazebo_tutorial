@@ -30,6 +30,8 @@ RUN apt-get update \
   wget \
   vim \
   curl \
+  libgl1-mesa-glx \
+  libgl1-mesa-dri \
   # Cleanup
   && rm -rf /var/lib/apt/lists/* 
 
