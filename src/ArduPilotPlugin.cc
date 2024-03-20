@@ -423,6 +423,12 @@ class gazebo::ArduPilotPluginPrivate
   public: int connectionTimeoutMaxCount;
 
   public: double last_cmd = 150;
+
+  /// \brief Pointer to the transport node
+  public: transport::NodePtr node;
+
+   /// \brief Publisher to the gimbal status topic
+  public: transport::PublisherPtr pub;
 };
 
 /////////////////////////////////////////////////
@@ -446,6 +452,13 @@ void ArduPilotPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
   this->dataPtr->model = _model;
   this->dataPtr->modelName = this->dataPtr->model->GetName();
+
+std::string topic = std::string("~/") +  this->dataPtr->model->GetName() +
+    "/command_request";
+this->dataPtr->node = transport::NodePtr(new transport::Node());
+  this->dataPtr->node->Init(this->dataPtr->model->GetWorld()->Name());
+  this->dataPtr->pub =
+    this->dataPtr->node->Advertise<gazebo::msgs::Request>(topic);
 
   _model->Print("[ArduPilotPlugin] Model :");
   // modelXYZToAirplaneXForwardZDown brings us from gazebo model frame:
@@ -518,7 +531,8 @@ void ArduPilotPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     if (control.type != "VELOCITY" &&
         control.type != "POSITION" &&
-        control.type != "EFFORT")
+        control.type != "EFFORT" &&
+        control.type != "FORWARD")
     {
       gzwarn << "[" << this->dataPtr->modelName << "] "
              << "Control type [" << control.type
@@ -545,9 +559,9 @@ void ArduPilotPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     // Get the pointer to the joint.
     control.joint = _model->GetJoint(control.jointName);
-    if (control.joint == nullptr)
+    if (control.type != "FORWARD" && control.joint == nullptr)
     {
-      gzerr << "[" << this->dataPtr->modelName << "] "
+      gzerr << "[" << this->dataPtr->modelName << "] -- " << control.type 
             << "Couldn't find specified joint ["
             << control.jointName << "]. This plugin will not run.\n";
       return;
@@ -1015,6 +1029,17 @@ void ArduPilotPlugin::ApplyMotorForces(const double _dt)
       {
         const double force = this->dataPtr->controls[i].cmd;
         this->dataPtr->controls[i].joint->SetForce(0, force);
+      }
+      else if (this->dataPtr->controls[i].type == "FORWARD")
+      {
+        gazebo::msgs::Request m;
+        auto c = this->dataPtr->controls[i];
+        m.set_id(c.channel);
+        m.set_request(c.jointName);
+        m.set_data("PWM");
+        m.set_dbl_data(c.cmd);
+        this->dataPtr->pub->Publish(m);
+          
       }
       else
       {

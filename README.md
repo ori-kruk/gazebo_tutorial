@@ -44,6 +44,16 @@ docker run -it --privileged --net=host \
 test_image:latest
 ```
 
+
+---
+
+# pub msg
+
+```bash
+gz topic -p "/gazebo/default/iris_demo/gimbal_tilt_cmd"  "gazebo.msgs.GzString" -m 'data: "1.0"'
+/gazebo/default/iris_demo/gimbal_tilt_cmd
+```
+
 ---
 
 ## Resource 
