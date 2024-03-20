@@ -1,0 +1,17 @@
+{
+    "name": "gazebo11",
+    "workspaceFolder": "/workspaces/gazebo_tutorial/",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "user",
+    "runArgs": [
+        "--network=host",
+        "--hostname=gz"
+    ],
+    "postStartCommand": "source /workspaces/gazebo_tutorial/.devcontainer/post_start_script.sh",
+    "remoteEnv": {
+        // "GAZEBO_MODEL_PATH": "/workspaces/gazebo_tutorial/models"
+    }
+}
