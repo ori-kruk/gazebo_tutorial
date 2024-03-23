@@ -16,9 +16,18 @@ target_link_libraries(ArduCopterPlugin ${GAZEBO_LIBRARIES})
 add_library(ArduPilotPlugin SHARED ArduPilotPlugin.cc)
 target_link_libraries(ArduPilotPlugin ${GAZEBO_LIBRARIES})
 
+add_library(NodeDemoPlugin SHARED NodeDemoPlugin.cc)
+target_link_libraries(NodeDemoPlugin ${GAZEBO_LIBRARIES})
+
+add_library(JointControlDemoPlugin SHARED JointControlDemoPlugin.cc)
+target_link_libraries(JointControlDemoPlugin ${GAZEBO_LIBRARIES})
+
+
 install(TARGETS
 GimbalSmall2dPlugin
 ArduCopterPlugin
 ArduPilotPlugin
+NodeDemoPlugin
+JointControlDemoPlugin
   DESTINATION ${PROJECT_SOURCE_DIR}/bin
 )
