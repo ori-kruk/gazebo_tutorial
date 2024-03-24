@@ -1,18 +1,22 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
             "includePath": [
-                "${workspaceFolder}/**",
+                "/opt/ros/humble/include/**",
                 "/usr/include/gazebo-11/**",
                 "/usr/include/ignition/**",
-                "/usr/include/sdformat-9.7/**"
+                "/usr/include/sdformat-9.7/**",
+                "${workspaceFolder}/include/**"
             ],
-            "defines": [],
+            "name": "ROS",
+            "intelliSenseMode": "linux-gcc-x64",
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "cStandard": "gnu11",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4

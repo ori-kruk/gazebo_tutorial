@@ -44,6 +44,34 @@ docker run -it --privileged --net=host \
 test_image:latest
 ```
 
+
+---
+
+# pub msg
+
+```bash
+gz topic -p "/gazebo/default/iris_demo/gimbal_tilt_cmd"  "gazebo.msgs.GzString" -m 'data: "1.0"'
+/gazebo/default/iris_demo/gimbal_tilt_cmd
+```
+
+
+```bash
+docker run -it --rm \
+--name gz11 \
+--hostname gz11 \
+--privileged \
+-v /home/user/projects/gazebo_tutorial:/workspaces/gazebo_tutorial \
+--env="DISPLAY=$DISPLAY"  \
+--env="QT_X11_NO_MITSHM=1" \
+--volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+--volume="$XAUTHORITY:$XAUTHORITY" \
+--env="XAUTHORITY=$XAUTHORITY" \
+--net=host \
+ --device=/dev/dri:/dev/dri \
+gazebo:humble \
+/bin/bash
+```
+
 ---
 
 ## Resource 

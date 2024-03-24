@@ -1,0 +1,115 @@
+<?xml version='1.0'?>
+<sdf version="1.7">
+  <model name="stand">
+    <plugin name='set_joint_position_plugin' filename='libJointControlPlugin.so'>
+      <joint>roll</joint>
+    </plugin>
+    <frame name="base">
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <link name="link">
+      <pose relative_to="base">0 0 0.5 0 0 0</pose>
+      <inertial>
+        <mass>100.0</mass>
+
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <frame name="base_tip" attached_to="base">
+      <pose relative_to="base">0 0 1 0 0 0</pose>
+    </frame>
+    <joint type="revolute" name="simple">
+      <pose relative_to="base_tip">0 0 0 0 0 0</pose>
+      <child>link2</child>
+      <parent>link</parent>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <link name="link2">
+      <pose relative_to="base_tip">0 0 0.25 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://stand/materials/scripts</uri>
+            <uri>model://stand/materials/textures</uri>
+            <name>arrow</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <link name="link3">
+      <inertial>
+        <mass>0.1</mass>
+
+      </inertial>
+      <pose relative_to="base_tip">1 0 -0.1 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1 0.1 0.1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1 0.1 0.1</size>
+          </box>
+        </geometry>
+      </visual>
+      <sensor name="roll_imu" type="imu">
+        <pose>0 0 0 0 0 1.575</pose>
+        <always_on>1</always_on>
+      </sensor>
+    </link>
+    <joint type="revolute" name="roll">
+      <pose relative_to="base_tip">0.5 0 -0.1 0 0 0</pose>
+      <child>link3</child>
+      <parent>link</parent>
+
+  
+
+      <axis>
+        <xyz>1 0 0</xyz>
+      
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-3.14159265</lower>
+          <upper>3.14159265</upper>
+          <effort>10</effort>
+          <velocity>-1</velocity>
+        </limit>
+      </axis>
+    </joint>
+    </model>
+
+
+</sdf>

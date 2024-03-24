@@ -27,8 +27,14 @@
             "extensions": [
                 "ms-vscode.cpptools",
                 "twxs.cmake",
-                "albert.tabout"
-            ]
+                "albert.tabout",
+                "redhat.vscode-xml"
+            ],
+            "settings": {
+                "[xml]": {
+                    "editor.defaultFormatter": "redhat.vscode-xml"
+                }
+            }
         }
     }  
 }

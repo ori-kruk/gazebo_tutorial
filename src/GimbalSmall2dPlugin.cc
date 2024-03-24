@@ -33,7 +33,7 @@ class gazebo::GimbalSmall2dPluginPrivate
 {
   /// \brief Callback when a command string is received.
   /// \param[in] _msg Mesage containing the command string
-  public: void OnStringMsg(ConstGzStringPtr &_msg);
+  public: void OnRequestMsg(ConstRequestPtr &_msg);
 
   /// \brief A list of event connections
   public: std::vector<event::ConnectionPtr> connections;
@@ -106,10 +106,10 @@ void GimbalSmall2dPlugin::Init()
   this->dataPtr->lastUpdateTime =
     this->dataPtr->model->GetWorld()->SimTime();
 
-  std::string topic = std::string("~/") +  this->dataPtr->model->GetName() +
+  std::string topic = "/gazebo/default/iris_demo/command_request"; //std::string("~/") +  this->dataPtr->model->GetName() +
     "/gimbal_tilt_cmd";
   this->dataPtr->sub = this->dataPtr->node->Subscribe(topic,
-      &GimbalSmall2dPluginPrivate::OnStringMsg, this->dataPtr.get());
+      &GimbalSmall2dPluginPrivate::OnRequestMsg, this->dataPtr.get());
 
   this->dataPtr->connections.push_back(event::Events::ConnectWorldUpdateBegin(
           std::bind(&GimbalSmall2dPlugin::OnUpdate, this)));
@@ -122,9 +122,13 @@ void GimbalSmall2dPlugin::Init()
 }
 
 /////////////////////////////////////////////////
-void GimbalSmall2dPluginPrivate::OnStringMsg(ConstGzStringPtr &_msg)
+void GimbalSmall2dPluginPrivate::OnRequestMsg(ConstRequestPtr &_msg)
 {
-  this->command = atof(_msg->data().c_str());
+  auto mode = _msg->data();
+  auto cmd = _msg->dbl_data();
+  auto deg = ((cmd - 1000)/1000)*90;
+  auto rad = 3.14*deg/180;
+  this->command = rad;
 }
 
 /////////////////////////////////////////////////
