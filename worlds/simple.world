@@ -27,6 +27,7 @@
                 </visual>
             </link>
             <plugin name="simple" filename="libNodeDemoPlugin.so" />
+            <plugin name="ros_simple" filename="libRosNodeDemoPlugin.so" />
         </model>
     </world>
 </sdf>
