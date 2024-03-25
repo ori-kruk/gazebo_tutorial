@@ -7,6 +7,7 @@
 
 namespace gazebo
 {
+    class JointControlPluginPrivate;
     class JointControlPlugin : public ModelPlugin
     {
     public:
@@ -21,5 +22,7 @@ namespace gazebo
         transport::SubscriberPtr sub;
         sensors::ImuSensorPtr imuSensor;
         physics::JointPtr joint;
+        std::shared_ptr<JointControlPluginPrivate> dataPtr;
+         void OnUpdate();
     };
 }

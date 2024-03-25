@@ -6,6 +6,7 @@ ros2 run rqt_image_view rqt_image_view
 <?xml version="1.0"?>
 <sdf version="1.6">
     <world name="default">
+        <gravity>0 0 0</gravity>
         <!-- A global light source -->
         <include>
             <uri>model://sun</uri>
@@ -18,10 +19,11 @@ ros2 run rqt_image_view rqt_image_view
             <uri>model://asphalt_plane</uri>
         </include>
         <model name="static_camera">
-            <static>true</static>
-            <pose>0 0 1 0 1.575 0</pose>
+            <static>false</static>
+            
             <link name="cam_link">
-                <pose>0 0 0 0 0 0 </pose>
+
+                <pose frame="">0 0 1 0 1.575 0</pose>
                 <inertial>
                     <mass>0.01</mass>
                     <inertia>
@@ -62,7 +64,14 @@ ros2 run rqt_image_view rqt_image_view
                       </plugin>
                     </sensor>
             </link>
+            <!-- <joint name="c2w" type="fixed">
+                <parent>world</parent>
+                <child>cam_link</child>
+                
+            </joint> -->
+            <plugin name="link_control" filename="libLinkControlPlugin.so" />
         </model>
+        
         <!-- <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
       <ode>

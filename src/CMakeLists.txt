@@ -11,6 +11,11 @@ include_directories(
 link_directories(${GAZEBO_LIBRARY_DIRS})
 # list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
+
+
+add_library(LinkControlPlugin SHARED LinkControlPlugin.cc)
+target_link_libraries(LinkControlPlugin ${GAZEBO_LIBRARIES})
+
 add_library(GimbalSmall2dPlugin SHARED GimbalSmall2dPlugin.cc)
 target_link_libraries(GimbalSmall2dPlugin ${GAZEBO_LIBRARIES})
 
@@ -42,6 +47,8 @@ target_link_libraries(RosNodeDemoPlugin
   ${gazebo_ros_LIBRARIES}
   )
 
+  add_library(GimbalControllerPlugin SHARED GimbalControllerPlugin.cc)
+  target_link_libraries(GimbalControllerPlugin ${GAZEBO_LIBRARIES})
 
 install(TARGETS
 GimbalSmall2dPlugin
@@ -50,5 +57,7 @@ ArduPilotPlugin
 NodeDemoPlugin
 JointControlDemoPlugin
 RosNodeDemoPlugin
+LinkControlPlugin
+GimbalControllerPlugin
   DESTINATION ${PROJECT_SOURCE_DIR}/bin
 )

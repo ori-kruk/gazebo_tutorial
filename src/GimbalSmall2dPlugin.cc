@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 #include <string>
 #include <vector>
 
@@ -33,46 +33,57 @@ class gazebo::GimbalSmall2dPluginPrivate
 {
   /// \brief Callback when a command string is received.
   /// \param[in] _msg Mesage containing the command string
-  public: void OnRequestMsg(ConstRequestPtr &_msg);
+public:
+  void OnRequestMsg(ConstRequestPtr &_msg);
 
   /// \brief A list of event connections
-  public: std::vector<event::ConnectionPtr> connections;
+public:
+  std::vector<event::ConnectionPtr> connections;
 
   /// \brief Subscriber to the gimbal command topic
-  public: transport::SubscriberPtr sub;
+public:
+  transport::SubscriberPtr sub;
 
   /// \brief Publisher to the gimbal status topic
-  public: transport::PublisherPtr pub;
+public:
+  transport::PublisherPtr pub;
 
   /// \brief Parent model of this plugin
-  public: physics::ModelPtr model;
+public:
+  physics::ModelPtr model;
 
   /// \brief Joint for tilting the gimbal
-  public: physics::JointPtr tiltJoint;
+public:
+  physics::JointPtr tiltJoint;
 
   /// \brief Command that updates the gimbal tilt angle
-  public: double command = IGN_PI_2;
+public:
+  double command = IGN_PI_2;
 
   /// \brief Pointer to the transport node
-  public: transport::NodePtr node;
+public:
+  transport::NodePtr node;
 
   /// \brief PID controller for the gimbal
-  public: common::PID pid;
+public:
+  common::PID pid;
 
   /// \brief Last update sim time
-  public: common::Time lastUpdateTime;
+public:
+  common::Time lastUpdateTime;
+  sensors::ImuSensorPtr imu_sensor;
 };
 
 /////////////////////////////////////////////////
 GimbalSmall2dPlugin::GimbalSmall2dPlugin()
-  : dataPtr(new GimbalSmall2dPluginPrivate)
+    : dataPtr(new GimbalSmall2dPluginPrivate)
 {
   this->dataPtr->pid.Init(1, 0, 0, 0, 0, 1.0, -1.0);
 }
 
 /////////////////////////////////////////////////
 void GimbalSmall2dPlugin::Load(physics::ModelPtr _model,
-  sdf::ElementPtr _sdf)
+                               sdf::ElementPtr _sdf)
 {
   this->dataPtr->model = _model;
 
@@ -95,6 +106,8 @@ void GimbalSmall2dPlugin::Load(physics::ModelPtr _model,
     gzerr << "GimbalSmall2dPlugin::Load ERROR! Can't get joint '"
           << jointName << "' " << endl;
   }
+
+  
 }
 
 /////////////////////////////////////////////////
@@ -104,21 +117,21 @@ void GimbalSmall2dPlugin::Init()
   this->dataPtr->node->Init(this->dataPtr->model->GetWorld()->Name());
 
   this->dataPtr->lastUpdateTime =
-    this->dataPtr->model->GetWorld()->SimTime();
+      this->dataPtr->model->GetWorld()->SimTime();
 
-  std::string topic = "/gazebo/default/iris_demo/command_request"; //std::string("~/") +  this->dataPtr->model->GetName() +
-    "/gimbal_tilt_cmd";
+  std::string topic = "/gazebo/default/iris_demo/command_request"; // std::string("~/") +  this->dataPtr->model->GetName() +
+  "/gimbal_tilt_cmd";
   this->dataPtr->sub = this->dataPtr->node->Subscribe(topic,
-      &GimbalSmall2dPluginPrivate::OnRequestMsg, this->dataPtr.get());
+                                                      &GimbalSmall2dPluginPrivate::OnRequestMsg, this->dataPtr.get());
 
   this->dataPtr->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-          std::bind(&GimbalSmall2dPlugin::OnUpdate, this)));
+      std::bind(&GimbalSmall2dPlugin::OnUpdate, this)));
 
   topic = std::string("~/") +
-    this->dataPtr->model->GetName() + "/gimbal_tilt_status";
+          this->dataPtr->model->GetName() + "/gimbal_tilt_status";
 
   this->dataPtr->pub =
-    this->dataPtr->node->Advertise<gazebo::msgs::GzString>(topic);
+      this->dataPtr->node->Advertise<gazebo::msgs::GzString>(topic);
 }
 
 /////////////////////////////////////////////////
@@ -126,8 +139,8 @@ void GimbalSmall2dPluginPrivate::OnRequestMsg(ConstRequestPtr &_msg)
 {
   auto mode = _msg->data();
   auto cmd = _msg->dbl_data();
-  auto deg = ((cmd - 1000)/1000)*90;
-  auto rad = 3.14*deg/180;
+  auto deg = ((cmd - 1000) / 1000) * 90;
+  auto rad = 3.14 * deg / 180;
   this->command = rad;
 }
 
