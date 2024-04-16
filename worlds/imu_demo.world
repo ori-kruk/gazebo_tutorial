@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+    <world name="default">
+        <!-- A global light source -->
+        <include>
+            <uri>model://sun</uri>
+        </include>
+        <!-- A ground plane -->
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+
+        <model name="c">
+            <frame name="f1">
+                <pose>0 0 1 0 0 0</pose>
+            </frame>
+
+            <include>
+                <uri>model://simple_box</uri>
+                <pose>0 0 0 0 0 0</pose>
+            </include>
+
+            <joint name="b2imu" type="fixed">
+                <parent>simple_box::chassis</parent>
+                <child>imu1_link</child>
+            </joint>
+
+            <link name="imu1_link">
+                <pose relative_to="f1">0 0 .05 0 0.707 0</pose>
+                <visual name="visual">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.1 0.1</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <script>
+                            <uri>file://arrow/materials/scripts</uri>
+                            <uri>file://arrow/materials/textures</uri>
+                            <name>arrow</name>
+                        </script>
+                    </material>
+                </visual>
+                <sensor name="imu_sensor" type="imu">
+                    <pose>0 0 0 0 0 0</pose>
+                    <always_on>1</always_on>
+                </sensor>
+            </link>
+
+            <link name="imu2_link">
+                <pose relative_to="f1">0.2 0 .05 0 0 0</pose>
+                <visual name="visual">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.1 0.1</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <script>
+                            <uri>file://arrow/materials/scripts</uri>
+                            <uri>file://arrow/materials/textures</uri>
+                            <name>arrow</name>
+                        </script>
+                    </material>
+                </visual>
+                <sensor name="imu_sensor" type="imu">
+                    <pose>0 0 0 0 1.575 0</pose>
+                    <always_on>1</always_on>
+                </sensor>
+            </link>
+            <joint name="b2imu2" type="fixed">
+                <parent>simple_box::chassis</parent>
+                <child>imu2_link</child>
+            </joint>
+
+
+            <link name="imu3_link">
+                <pose relative_to="f1">-0.2 0 .05 0 1.575 0</pose>
+                <visual name="visual">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.1 0.1</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <script>
+                            <uri>file://arrow/materials/scripts</uri>
+                            <uri>file://arrow/materials/textures</uri>
+                            <name>arrow</name>
+                        </script>
+                    </material>
+                </visual>
+                <sensor name="imu_sensor" type="imu">
+                    <pose>0 0 0 0 0 0</pose>
+                    <always_on>1</always_on>
+                </sensor>
+            </link>
+            <joint name="b2imu3" type="fixed">
+                <parent>simple_box::chassis</parent>
+                <child>imu3_link</child>
+            </joint>
+
+            <link name="imu4_link">
+                <pose relative_to="f1">-0.2 0.2 .05 0 0 0</pose>
+                <visual name="visual">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.1 0.1</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <script>
+                            <uri>file://arrow/materials/scripts</uri>
+                            <uri>file://arrow/materials/textures</uri>
+                            <name>arrow</name>
+                        </script>
+                    </material>
+                </visual>
+                <sensor name="imu_sensor" type="imu">
+                    <pose>0 0 0 0 0 0</pose>
+                    <always_on>1</always_on>
+                </sensor>
+            </link>
+            <joint name="b2imu4" type="fixed">
+                <parent>simple_box::chassis</parent>
+                <child>imu4_link</child>
+            </joint>
+        </model>
+    </world>
+</sdf>

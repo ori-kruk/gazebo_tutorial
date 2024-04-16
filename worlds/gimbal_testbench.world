@@ -1,0 +1,24 @@
+<!-- 
+https://github.com/ros2/rmw_cyclonedds
+ros2 run rqt_image_view rqt_image_view
+
+ -->
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <world name="default">
+        <!-- A global light source -->
+        <include>
+            <uri>model://sun</uri>
+        </include>
+        <!-- A ground plane -->
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+        <include>
+            <uri>model://asphalt_plane</uri>
+        </include>
+        <include>
+            <uri>model://stand_with_gimbal</uri>
+        </include>
+    </world>
+</sdf>

@@ -1,10 +1,7 @@
 {
     "name": "gazebo11",
     "workspaceFolder": "/workspaces/gazebo_tutorial/",
-    "build": {
-        "context": "..",
-        "dockerfile": "Dockerfile"
-    },
+    "image": "gazebo:humble",
     "remoteUser": "user",
     "runArgs": [
         "--name=gz11",
@@ -15,8 +12,9 @@
         "--device=/dev/dri:/dev/dri "
     ],
     //"postStartCommand": "source /workspaces/gazebo_tutorial/.devcontainer/post_start_script.sh",
+    // "postStartCommand": "/bin/bash 'source /workspaces/gazebo_tutorial/scripts/env.sh'",
     "containerEnv": {
-        "DISPLAY": "unix:0",
+        "DISPLAY": "unix:1",
         "QT_X11_NO_MITSHM": "1"
     },
     "mounts": [

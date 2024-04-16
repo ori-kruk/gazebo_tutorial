@@ -1,9 +1,9 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <sdf version="1.6">
   <model name='rrbot'>
     <joint name="weld" type="fixed">
-        <parent>world</parent>
-        <child>link1</child>
+      <parent>world</parent>
+      <child>link1</child>
     </joint>
     <link name='link1'>
       <pose>0 0 0 0 -0 0</pose>
@@ -53,7 +53,7 @@
         </limit>
         <dynamics>
           <damping>0.7</damping>
-          <friction>0.0</friction>          
+          <friction>0.0</friction>
           <spring_reference>0</spring_reference>
           <spring_stiffness>0</spring_stiffness>
         </dynamics>
@@ -107,7 +107,7 @@
         </limit>
         <dynamics>
           <damping>0.7</damping>
-          <friction>0.0</friction>          
+          <friction>0.0</friction>
           <spring_reference>0</spring_reference>
           <spring_stiffness>0</spring_stiffness>
         </dynamics>
@@ -149,6 +149,32 @@
         </material>
       </visual>
     </link>
+
+    <link name="imu_link">
+      <pose relative_to="link3">0 0 0.1 0 0 0</pose>
+      <visual name='link4_visual'>
+        <geometry>
+          <box>
+            <size>0.1 0.1 0.1</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+      <sensor name="link3_imu" type="imu">
+        <always_on>1</always_on>
+      </sensor>
+    </link>
+
+    <joint name="link3_2_imu_link" type="fixed">
+      <parent>link3</parent>
+      <child>imu_link</child>
+    </joint>
+
     <plugin name="joint_control" filename="libJointControlDemoPlugin.so">
       <joint>joint2</joint>
       <control>
@@ -161,7 +187,7 @@
 </sdf>
 
 <!-- 
-gz topic -p " /gazebo/default/rrbot/command"  "gazebo.msgs.GzString" -m 'data: "1.0"'
+gz topic -p "/gazebo/default/rrbot/command"  "gazebo.msgs.GzString" -m 'data: "1.0"'
 
  
  -->

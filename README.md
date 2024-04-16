@@ -51,11 +51,11 @@ test_image:latest
 
 ```bash
 gz topic -p "/gazebo/default/iris_demo/gimbal_tilt_cmd"  "gazebo.msgs.GzString" -m 'data: "1.0"'
-/gazebo/default/iris_demo/gimbal_tilt_cmd
+gz topic -p "/gazebo/default/stand_with_gimbal/command"  "gazebo.msgs.GzString" -m 'data: "0.0"'
 ```
 
 
-```bash
+```bash title="intel"
 docker run -it --rm \
 --name gz11 \
 --hostname gz11 \
@@ -72,6 +72,11 @@ gazebo:humble \
 /bin/bash
 ```
 
+
+
+```bash title="nvidia"
+docker run --rm --gpus all nvidia/cuda:12.3.2-runtime-ubuntu22.04 nvidia-smi
+```
 ---
 
 ## Resource 

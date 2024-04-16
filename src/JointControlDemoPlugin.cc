@@ -14,16 +14,18 @@ class gazebo::JointControlPluginPrivate
 public:
   common::PID roll_pid;
   physics::JointPtr roll_joint;
+  physics::JointPtr base_joint;
   physics::ModelPtr model;
   std::vector<event::ConnectionPtr> connections;
   common::Time lastUpdateTime;
-  double roll_command;
+  double roll_command=0.0;
+
 };
 
 JointControlPlugin::JointControlPlugin()
     : dataPtr(new JointControlPluginPrivate)
 {
-    this->dataPtr->roll_pid.Init(10, 0.001, -1, 0, 0, 100.0, -100.0);
+    this->dataPtr->roll_pid.Init(30.0, 3.0, 15.0, 1, -1, 10.0, -10.0);
 
   this->dataPtr->connections.push_back(event::Events::ConnectWorldUpdateBegin(
       std::bind(&JointControlPlugin::OnUpdate, this)));
@@ -42,6 +44,20 @@ void JointControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   auto pub_topic = std::string("~/") + _model->GetName() + "/state";
   this->pub = this->node->Advertise<gazebo::msgs::GzString>(pub_topic);
 
+  sdf::ElementPtr controlSDF;
+  if (_sdf->HasElement("control"))
+  {
+    controlSDF = _sdf->GetElement("control");
+  }
+
+  if (controlSDF){
+      this->dataPtr->roll_pid.SetPGain(controlSDF->Get<double>("p"));
+      this->dataPtr->roll_pid.SetIGain(controlSDF->Get<double>("i"));
+      this->dataPtr->roll_pid.SetDGain(controlSDF->Get<double>("d"));
+
+      gzmsg << this->dataPtr->roll_pid.GetPGain() << std::endl;
+  }
+
   std::string jointName = "tilt_joint";
   if (_sdf->HasElement("joint"))
   {
@@ -51,6 +67,7 @@ void JointControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   gzmsg << "joint name: " << this->dataPtr->roll_joint->GetName() << std::endl;
   gzmsg << "joint name: " << this->dataPtr->roll_joint->GetScopedName() << std::endl;
 
+  // this->dataPtr->base_joint = _model->GetJoint("joint1");
   // std::string imuSensorName = "roll_imu";
   // if (_sdf->HasElement("imu_sensor"))
   // {
@@ -65,36 +82,30 @@ void JointControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
 void JointControlPlugin::OnRequestMsg(ConstGzStringPtr &_msg)
 {
-  auto command = atof(_msg->data().c_str());
-  this->joint->SetPosition(0, command, false);
-  auto roll = this->imuSensor->Orientation().Euler().X();
-  gzmsg << "roll" << std::endl;
-
-  gzmsg << _msg->data() << std::endl;
-  gazebo::msgs::GzString m;
-  m.set_data(std::to_string(roll));
-  this->pub->Publish(m);
+  this->dataPtr->roll_command = atof(_msg->data().c_str());
+  gzmsg << "set command: " << this->dataPtr->roll_command << std::endl;
 }
 
 void JointControlPlugin::OnUpdate()
 {
   if (!this->dataPtr->roll_joint)
   {
-    gzerr << "joitn not found" << std::endl;
+    gzerr << "joint not found" << std::endl;
     return;
   }
+  // this->dataPtr->base_joint->SetPosition(0,0);
   common::Time time = this->dataPtr->model->GetWorld()->SimTime();
   if (time < this->dataPtr->lastUpdateTime)
   {
     this->dataPtr->lastUpdateTime = time;
     return;
   }
-  double dt = (this->dataPtr->lastUpdateTime - time).Double();
+  double dt = (time - this->dataPtr->lastUpdateTime).Double();
   double roll_angle = this->dataPtr->roll_joint->Position(0);
   double roll_error = roll_angle - this->dataPtr->roll_command;
   double roll_force = this->dataPtr->roll_pid.Update(roll_error, dt);
   this->dataPtr->roll_joint->SetForce(0, roll_force);
-
+  // gzmsg << "force: " << roll_force << std::endl;
   this->dataPtr->lastUpdateTime = time;
 }
 

@@ -1,8 +1,13 @@
 <?xml version='1.0'?>
 <sdf version="1.7">
   <model name="stand">
-    <plugin name='set_joint_position_plugin' filename='libJointControlPlugin.so'>
+    <plugin name='set_joint_position_plugin' filename='libJointControlDemoPlugin.so'>
       <joint>roll</joint>
+      <control>
+        <p>30</p>
+        <i>3</i>
+        <d>15</d>
+      </control>
     </plugin>
     <frame name="base">
       <pose>0 0 0 0 0 0</pose>
@@ -67,7 +72,7 @@
 
     <link name="link3">
       <inertial>
-        <mass>0.1</mass>
+        <mass>1</mass>
 
       </inertial>
       <pose relative_to="base_tip">1 0 -0.1 0 0 0</pose>
@@ -95,11 +100,10 @@
       <child>link3</child>
       <parent>link</parent>
 
-  
 
       <axis>
         <xyz>1 0 0</xyz>
-      
+
         <use_parent_model_frame>1</use_parent_model_frame>
         <limit>
           <lower>-3.14159265</lower>
@@ -109,7 +113,7 @@
         </limit>
       </axis>
     </joint>
-    </model>
+  </model>
 
 
 </sdf>

@@ -50,6 +50,9 @@ target_link_libraries(RosNodeDemoPlugin
   add_library(GimbalControllerPlugin SHARED GimbalControllerPlugin.cc)
   target_link_libraries(GimbalControllerPlugin ${GAZEBO_LIBRARIES})
 
+add_library(RangeSensorPlugin SHARED RangeSensorPlugin.cpp)
+target_link_libraries(RangeSensorPlugin ${GAZEBO_LIBRARIES})
+
 install(TARGETS
 GimbalSmall2dPlugin
 ArduCopterPlugin
@@ -59,5 +62,6 @@ JointControlDemoPlugin
 RosNodeDemoPlugin
 LinkControlPlugin
 GimbalControllerPlugin
+RangeSensorPlugin
   DESTINATION ${PROJECT_SOURCE_DIR}/bin
 )

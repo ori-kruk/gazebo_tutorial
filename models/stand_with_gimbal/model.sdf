@@ -1,8 +1,16 @@
 <?xml version='1.0'?>
-<sdf version="1.6">
+<sdf version="1.7">
   <model name="stand_with_gimbal">
     <include>
       <uri>model://stand</uri>
     </include>
+    <include>
+      <pose relative_to="stand::link3">0.4 0 -0.05 0 0 1.575</pose>
+      <uri>model://my_gimbal_3d</uri>
+    </include>
+    <joint name="gimbal2stand" type="fixed">
+      <parent>stand::link3</parent>
+      <child>my_gimbal_3d::base_link</child>
+    </joint>
   </model>
   </sdf>

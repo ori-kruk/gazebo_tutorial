@@ -1,0 +1,22 @@
+version: "3"
+services:
+  gz:
+    image: gazebo:humble
+    privileged: true
+    container_name: gz11
+    hostname: gz11
+    network_mode: "host"
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/root/.Xauthority
+      - .:/workspace:cached
+    devices:
+      - "/dev/dri:/dev/dri"
+    command: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+
+
